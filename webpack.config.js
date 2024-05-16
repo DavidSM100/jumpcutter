@@ -167,7 +167,7 @@ module.exports = env => {
             from: 'manifest.json',
             // Compress JSON. Might want to switch to https://webpack.js.org/plugins/json-minimizer-webpack-plugin/
             // later.
-            transform: (content) => JSON.stringify(JSON.parse(content)),
+            transform: (content) => JSON.stringify(injectBrowserManifestFields(JSON.parse(content), env.browser)),
           },
 
           {
@@ -238,4 +238,24 @@ module.exports = env => {
       },
     }
   };
+}
+
+function injectBrowserManifestFields(manifest, browser) {
+  if (browser === "chromium") {
+    manifest.background = {
+      service_worker: "background/main.js",
+    };
+  } else if (browser === "gecko") {
+    manifest.background = {
+      scripts: ["background/main.js"],
+    };
+    manifest.browser_specific_settings = {
+      gecko: {
+        id: "jump-cutter@example.com",
+        strict_min_version: "91.0a1",
+      },
+    };
+  }
+
+  return manifest;
 }
