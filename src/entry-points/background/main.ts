@@ -115,10 +115,13 @@ let mayThisOnStorageChangeEventBeCausedByPostInstallScriptP: Promise<boolean> | 
 const settingsP = postInstallStorageChangesDoneP.then(() => getSettings());
 
 const initIconAndBadgeP = settingsP.then(s => initIconAndBadge(s));
+const initExperimentalAlgorithCheckerP = settingsP.then(s => initExperimentalAlgorithChecker(s))
 const onStorageChanged = createWrapperListener(async changes => {
   const settings = await settingsP;
   Object.assign(settings, settingsChanges2NewValues(changes));
 
+  await initExperimentalAlgorithCheckerP;
+  updateExperimentalAlgorithmChecker(changes);
   await initIconAndBadgeP;
   updateIconAndBadge(settings, changes);
 });
@@ -134,3 +137,57 @@ browserOrChrome.storage.onChanged.addListener(async (...args) => {
 
   await onStorageChanged(...args);
 });
+
+function updateExperimentalAlgorithmChecker(settingsChanges) {
+  const experimentalAlgorithmChange = settingsChanges.experimentalControllerType;
+  if (experimentalAlgorithmChange) {
+    const newValue = experimentalAlgorithmChange.newValue;
+    if (newValue === 2) {
+      registerExperimentalAlgorithmChecker();
+    }
+    if (newValue === 1) {
+      unregisterExperimentalAlgorithmChecker();
+    }
+  }
+}
+
+async function initExperimentalAlgorithChecker(settings) {
+  if (settings.experimentalControllerType === 2) {
+    await registerExperimentalAlgorithmChecker();
+  }
+}
+
+async function registerExperimentalAlgorithmChecker() {
+  console.log("registering script");
+  try {
+  await browserOrChrome.scripting.registerContentScripts([
+    {
+      id: "experimentalAlgorithmChecker",
+      matches: ["http://*/*", "https://*/*"],
+      js: ["content/cloneMediaSources-for-extension-world.js"],
+      allFrames: true,
+      runAt: "document_start",
+      // matchAboutBlank: true
+      /* There is no match about blank key on the dynamic registration
+       * `matchOriginAsFallback` is something alike, but is only available in chromium.
+       * perhaps is better to forget about matchAboutBlank?
+      */
+    }
+  ]);
+  console.log("script registered");
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function unregisterExperimentalAlgorithmChecker() {
+  console.log("unregistering script");
+  try {
+  await browserOrChrome.scripting.unregisterContentScripts({
+    ids: ["experimentalAlgorithmChecker"]
+  });
+  console.log("script unregistered");
+  } catch (err) {
+    console.log(err);
+  }
+}

@@ -2,7 +2,7 @@
   "name": "Jump Cutter",
   "version": "1.27.0",
   "description": "__MSG_extensionDescription__",
-  "permissions": ["storage"],
+  "permissions": ["storage", "scripting", "activeTab"],
   "content_security_policy": {
     "extension_pages": "default-src 'none'; script-src 'self'; img-src 'self'; style-src 'unsafe-inline';"
   },
@@ -19,13 +19,6 @@
       "js": ["content/main.js"],
       "all_frames": true,
       "run_at": "document_idle",
-      "match_about_blank": true
-    },
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content/cloneMediaSources-for-extension-world.js"],
-      "all_frames": true,
-      "run_at": "document_start",
       "match_about_blank": true
     }
   ],
