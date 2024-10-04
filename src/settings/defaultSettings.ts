@@ -250,4 +250,8 @@ export const defaultSettings: Readonly<Settings> = {
   enableDesyncCorrection: browserHasAudioDesyncBug,
 
   onPlaybackRateChangeFromOtherScripts: 'updateSoundedSpeed',
+
+  advancedMode: false,
+
+  simpleSlider: 50,
 };
