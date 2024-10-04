@@ -57,6 +57,8 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       | 'popupChartJumpPeriod'
       | 'dontAttachToCrossOriginMedia'
       | 'popupAlwaysShowOpenLocalFileLink'
+      | 'advancedMode'
+      | 'simpleSlider'
     >
     & ReturnType<Parameters<typeof createKeydownListener>[1]>
     & Parameters<typeof changeAlgorithmAndMaybeRelatedSettings>[0]
@@ -400,6 +402,24 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   $: controllerTypeAlwaysSounded = latestTelemetryRecord?.controllerType === ControllerKind_ALWAYS_SOUNDED;
 
   const displayNewBadgeOnExperimentalAlgorithm = new Date() < new Date('2024-09-30');
+
+  function onAdvancedModeChange() {
+    settingsKeysToSaveToStorage.add('advancedMode');
+    throttledSaveUnsavedSettingsToStorageAndTriggerCallbacks();
+    if (this.checked) {
+      settings.experimentalControllerType = ControllerKind_STRETCHING;
+      settings.marginBefore = 0;
+    }
+  }
+
+  function onSimpleSliderInput() {
+    settingsKeysToSaveToStorage.add('simpleSlider');
+    throttledSaveUnsavedSettingsToStorageAndTriggerCallbacks();
+    settings.volumeThreshold = settings.simpleSlider * 0.001;
+    settings.silenceSpeedRaw = settings.simpleSlider * 0.05 + 1;
+    settings.marginAfter = settings.simpleSlider * 0.01;
+  }
+
 </script>
 
 <svelte:window
@@ -437,6 +457,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       theme: 'my-tippy',
     }}
   >⚙️</button>
+  {#if settings.advancedMode}
   <div class="others__wrapper">
     <!-- TODO work on accessibility for the volume indicator. https://atomiks.github.io/tippyjs/v6/accessibility. -->
     <span
@@ -539,6 +560,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       </div>
     </button>
   </div>
+  {/if}
   <!-- TODO transitions? -->
   <div
     style={
@@ -692,6 +714,36 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   {/if}
   </div>
   </div>
+
+  {#if !settings.advancedMode}
+    <div style="margin-bottom: 5px; margin-top: 5px;">
+      <input
+      type="range"
+      style="width: 100%;"
+      min="0"
+      max="100"
+      bind:value={settings.simpleSlider}
+      on:input={onSimpleSliderInput}
+      />
+      <div style="display: flex; width: 100%">
+        <div style="width: 50%;">{getMessage("skipLess")}</div>
+        <div style="width: 50%; text-align: right;">{getMessage("skipMore")}</div>
+      </div>
+    </div>
+  {/if}
+
+  <div>
+    <label>
+      <input
+      type="checkbox"
+      bind:checked={settings.advancedMode}
+      on:change={onAdvancedModeChange}
+      />
+      {getMessage("advancedMode")}
+    </label>
+  </div>
+
+  {#if settings.advancedMode}
   <label
     use:tippy={{
       content: () => getMessage('useExperimentalAlgorithmTooltip'),
@@ -818,6 +870,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       theme: tippyThemeMyTippyAndPreLine,
     }}
   />
+  {/if}
   {#if settings.popupAlwaysShowOpenLocalFileLink}
     <!-- svelte-ignore a11y-missing-attribute --->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
