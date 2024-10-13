@@ -414,18 +414,10 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   function onSimpleSliderInput() {
     (createOnInputListener('simpleSlider'))();
     settings.volumeThreshold = settings.simpleSlider * 0.001;
-    settings.silenceSpeedRaw = settings.simpleSlider * 0.1 + 1;
+    settings.silenceSpeedRaw = settings.simpleSlider * 0.05 + 1;
     settings.marginAfter = settings.simpleSlider * 0.01;
   }
 
-  async function setSimpleModeDefaults() {
-    await settingsPromise;
-    if (!settings.advancedMode) {
-      onSimpleSliderInput();
-    }
-  }
-
-  setSimpleModeDefaults();
 </script>
 
 <svelte:window
@@ -722,7 +714,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   </div>
 
   {#if !settings.advancedMode}
-    <div style="margin-bottom: 5px;">
+    <div style="margin-bottom: 5px; margin-top: 5px;">
       <input
       type="range"
       style="width: 100%;"
