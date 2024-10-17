@@ -185,6 +185,11 @@ module.exports = env => {
             },
             transform: (content) => minimizeI18nMessagedJsonString(content, { unsafe: false }),
           },
+          {
+            context: "src",
+            from: "imgs",
+            to: "imgs",
+          },
           // Chromium apparently refuses to display the extension in 'nb_NO', if you make 'nb'
           // the browser's UI language. Let's do this to make it satisfied, while also keeping
           // the original 'nb_NO' directory intact for forwards-compatibility.

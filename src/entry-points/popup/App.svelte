@@ -426,6 +426,25 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   on:keydown={keydownListener}
 />
 {#await settingsPromise then _}
+  <div style="text-align: right;">
+    <button
+    on:click={() => {
+      browserOrChrome.runtime.openOptionsPage();
+      if (isMobile) {
+        // The options tab gets opened, but it's not visible
+        // because the popup stays open. Let's close it.
+        window.close();
+      }
+    }}
+    use:tippy={{
+      content: () => getMessage('more'),
+      theme: 'my-tippy',
+    }}
+  >
+    <img src="../imgs/settings.svg" alt="settings">
+  </button>
+  </div>
+
   <div style="display: flex; justify-content: center;">
     <label class="enabled-input">
       <!-- TODO it needs to be ensured that `on:change` (`on:input`) goes after `bind:` for all inputs.
@@ -442,21 +461,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     </label>
   </div>
   <!-- TODO but this is technically a button. Is this ok? -->
-  <button
-    id="options-button"
-    on:click={() => {
-      browserOrChrome.runtime.openOptionsPage();
-      if (isMobile) {
-        // The options tab gets opened, but it's not visible
-        // because the popup stays open. Let's close it.
-        window.close();
-      }
-    }}
-    use:tippy={{
-      content: () => getMessage('more'),
-      theme: 'my-tippy',
-    }}
-  >⚙️</button>
+
   {#if settings.advancedMode}
   <div class="others__wrapper">
     <!-- TODO work on accessibility for the volume indicator. https://atomiks.github.io/tippyjs/v6/accessibility. -->
@@ -611,7 +616,10 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
               <button
                 on:click={() => browserOrChrome.runtime.openOptionsPage()}
                 style="margin: 0.25rem"
-              >⚙️ {getMessage('changeElementSearchCriteria')}</button>
+              >
+              <img src="../imgs/settings.svg" alt="settings">
+              {getMessage('changeElementSearchCriteria')}
+            </button>
               <!-- Event though we now have implemented dynamic element search, there may still be some bug where this
               could be useful. -->
               <button
@@ -758,11 +766,10 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       type="checkbox"
       style="margin: 0 0.5rem 0 0;"
     >
-    <span>🧪</span>
     {#if displayNewBadgeOnExperimentalAlgorithm}
-      <span>🆕</span>
+      🆕
     {/if}
-    <span>&nbsp;{getMessage('useExperimentalAlgorithm')}</span>
+    {getMessage('useExperimentalAlgorithm')}
   </label>
   {#if latestTelemetryRecord?.clonePlaybackError}
     <p>
@@ -849,7 +856,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     }}
   />
   <RangeSlider
-    label="⏱️⬅️ {getMessage('marginBefore')}"
+    label="⬅️ {getMessage('marginBefore')}"
     {...rangeInputSettingNameToAttrs('MarginBefore', settings)}
     bind:value={settings.marginBefore}
     on:input={createOnInputListener('marginBefore')}
@@ -860,7 +867,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     }}
   />
   <RangeSlider
-    label="⏱️➡️ {getMessage('marginAfter')}"
+    label="➡️ {getMessage('marginAfter')}"
     {...rangeInputSettingNameToAttrs('MarginAfter', settings)}
     bind:value={settings.marginAfter}
     on:input={createOnInputListener('marginAfter')}
@@ -886,6 +893,19 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
 <style>
   body > label:not(:first-child) {
     margin-top: 1rem;
+  }
+
+  button {
+    border: none;
+    border-radius: 5px;
+  }
+
+  button img {
+    vertical-align: middle;
+  }
+
+  label {
+    user-select: none;
   }
 
   .enabled-input {
@@ -929,13 +949,13 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     text-align: center;
   }
 
-  #options-button {
+  /*#options-button {
     position: absolute;
     padding: 0;
     top: 0.75rem;
     right: 0.75rem;
     font-size: 1.5rem;
-  }
+}*/
 
   .capitalize-first-letter::first-letter {
     text-transform: capitalize;
