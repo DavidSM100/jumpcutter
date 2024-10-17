@@ -404,7 +404,8 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   const displayNewBadgeOnExperimentalAlgorithm = new Date() < new Date('2024-09-30');
 
   function onAdvancedModeChange() {
-    (createOnInputListener('advancedMode'))();
+    settingsKeysToSaveToStorage.add('advancedMode');
+    throttledSaveUnsavedSettingsToStorageAndTriggerCallbacks();
     if (this.checked) {
       settings.experimentalControllerType = ControllerKind_STRETCHING;
       settings.marginBefore = 0;
@@ -412,7 +413,8 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
   }
 
   function onSimpleSliderInput() {
-    (createOnInputListener('simpleSlider'))();
+    settingsKeysToSaveToStorage.add('simpleSlider');
+    throttledSaveUnsavedSettingsToStorageAndTriggerCallbacks();
     settings.volumeThreshold = settings.simpleSlider * 0.001;
     settings.silenceSpeedRaw = settings.simpleSlider * 0.05 + 1;
     settings.marginAfter = settings.simpleSlider * 0.01;
