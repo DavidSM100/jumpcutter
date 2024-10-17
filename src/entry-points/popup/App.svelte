@@ -726,8 +726,8 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       on:input={onSimpleSliderInput}
       />
       <div style="display: flex; width: 100%">
-        <div style="width: 50%;">Skip less</div>
-        <div style="width: 50%; text-align: right;">Skip more</div>
+        <div style="width: 50%;">{getMessage("skipLess")}</div>
+        <div style="width: 50%; text-align: right;">{getMessage("skipMore")}</div>
       </div>
     </div>
   {/if}
@@ -739,7 +739,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
       bind:checked={settings.advancedMode}
       on:change={onAdvancedModeChange}
       />
-      Advanced Mode
+      {getMessage("advancedMode")}
     </label>
   </div>
 
