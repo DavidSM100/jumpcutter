@@ -949,14 +949,6 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     text-align: center;
   }
 
-  /*#options-button {
-    position: absolute;
-    padding: 0;
-    top: 0.75rem;
-    right: 0.75rem;
-    font-size: 1.5rem;
-}*/
-
   .capitalize-first-letter::first-letter {
     text-transform: capitalize;
   }
