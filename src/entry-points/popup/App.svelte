@@ -1004,7 +1004,7 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
         {...openLocalFileLinkProps}
         on:click={onClickOpenLocalFileLink}
         style="margin-top: 1rem;"
-      >📂 {getMessage('openLocalFile')}</a>
+      >{getMessage('openLocalFile')}</a>
     {/if}
     <label
       style="
