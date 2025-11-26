@@ -60,7 +60,6 @@ module.exports = env => {
     // Taken from https://github.com/sveltejs/svelte-loader#usage
     resolve: {
       alias: {
-        svelte: path.resolve('node_modules', 'svelte/src/runtime'),
         '@': path.resolve(__dirname, 'src'),
       },
       extensions: ['.tsx', '.ts', '.mjs', '.js', '.svelte', '.json'],
