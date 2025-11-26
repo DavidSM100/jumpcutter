@@ -829,15 +829,8 @@ along with Jump Cutter Browser Extension.  If not, see <https://www.gnu.org/lice
     {/if}
     <span>&nbsp;{getMessage('useExperimentalAlgorithm')}</span>
   </label>
-  {#if (
-    // The opposite day mode only applies to the cloning controller.
-    settings.experimentalControllerType === ControllerKind_CLONING
-    && (
-      settings.oppositeDayMode === OppositeDayMode_UNDISCOVERED
-        ? oppositeDayModeIsDiscoverable
-        : settings.oppositeDayMode !== OppositeDayMode_HIDDEN_BY_USER
-    )
-  )}
+  <!-- The opposite day mode only applies to the cloning controller. -->
+  {#if settings.experimentalControllerType === ControllerKind_CLONING && (settings.oppositeDayMode === OppositeDayMode_UNDISCOVERED ? oppositeDayModeIsDiscoverable : settings.oppositeDayMode !== OppositeDayMode_HIDDEN_BY_USER)}
     <br>
     <label
       style="margin-top: 1rem; display: inline-flex; align-items: center;"
